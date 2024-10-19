@@ -1,0 +1,60 @@
+# Paso 1: Preparar el Entorno Machine Learning
+import pandas as pd
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Datos históricos
+results = [4594, 4947, 8554, 7172, 5035, 4295, 7845, 874, 1597, 9521, 8233, 
+           3133, 2413, 6506, 5309, 6363, 7077, 7661, 7691, 6433, 4103, 
+           4227, 6092, 5804, 4443, 1197, 764, 3431, 4398, 6043, 7726, 
+           7099, 51, 941, 6953, 171, 957, 1897, 1155, 3516, 1414, 
+           5950, 5645, 7397, 7967, 168, 1556,7142,1526,4360]
+
+# Convertir los resultados en un DataFrame
+data = []
+
+# Crear las características y etiquetas
+for i in range(len(results) - 4):  # Asegurar que haya suficientes datos
+    features = [results[i], results[i + 1], results[i + 2], results[i + 3]]
+    next_number = results[i + 4]
+    data.append(features + [next_number])
+
+# Crear un DataFrame
+df = pd.DataFrame(data, columns=['num1', 'num2', 'num3', 'num4', 'next_number'])
+
+# Dividir los datos en características (X) y etiquetas (y)
+X = df[['num1', 'num2', 'num3', 'num4']]  # Características
+y = df['next_number']  # Etiqueta a predecir
+
+# Dividir en conjuntos de entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Crear y entrenar el modelo
+model = DecisionTreeClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# Realizar predicciones
+predictions = model.predict(X_test)
+
+# Asegurar que las predicciones sean únicas
+unique_predictions = []
+for pred in predictions:
+    if pred not in unique_predictions:
+        unique_predictions.append(pred)
+
+# Limitar las predicciones únicas al tamaño de y_test
+if len(unique_predictions) > len(y_test):
+    unique_predictions = unique_predictions[:len(y_test)]
+
+# Calcular la precisión (ajustar según las predicciones únicas)
+# Comparar solo las predicciones válidas (tamaño igual a y_test)
+if len(unique_predictions) == len(y_test):
+    accuracy = accuracy_score(y_test, unique_predictions)
+else:
+    accuracy = 0  # O asigna un valor por defecto si no coinciden
+
+# Mostrar los resultados
+print("Predicciones únicas:", unique_predictions)
+print("Precisión del modelo:", accuracy)
