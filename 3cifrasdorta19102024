@@ -1,0 +1,100 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import Counter
+
+# Definir el número de simulaciones
+num_simulations = 15  # Cantidad de simulaciones
+
+# Lista para almacenar los resultados de cada simulación
+results = [594,947,554, 172, 35, 295, 845, 874, 597, 521, 233, 133, 413, 506, 309]
+
+# Simulación de Monte Carlo: Generar 100 números aleatorios
+for _ in range(num_simulations):
+    numbers = np.random.choice(range(1, 999), size=1, replace=False)  # Se elige 1 número sin repetición
+    results.extend(numbers)  # Guardamos los números generados
+
+# Contar la frecuencia de cada número
+number_counts = Counter(results)
+
+# Ordenar los números por frecuencia
+sorted_counts = dict(sorted(number_counts.items()))
+
+# Visualizar los resultados
+plt.bar(sorted_counts.keys(), sorted_counts.values())
+plt.xlabel('Número')
+plt.ylabel('Frecuencia')
+plt.title('Frecuencia de los Números de la Lotería tras 15 Simulaciones')
+plt.show()
+
+///
+
+import numpy as np
+from collections import Counter
+
+# Datos proporcionados por el usuario
+results_user = [594,947,554, 172, 35, 295, 845, 874, 597, 521, 233, 133, 413, 506, 309]
+
+# 1. Frecuencia de los números
+frequency = Counter(results_user)
+
+# 2. Promedio (media)
+mean_value = np.mean(results_user)
+
+# 3. Mediana
+median_value = np.median(results_user)
+
+# 4. Moda
+mode_value = Counter(results_user).most_common(1)[0][0]
+
+# 5. Varianza y desviación estándar
+variance_value = np.var(results_user)
+std_deviation_value = np.std(results_user)
+
+# Mostrar resultados
+print("Frecuencia de los números:", frequency)
+print("Promedio (media):", mean_value)
+print("Mediana:", median_value)
+print("Moda:", mode_value)
+print("Varianza:", variance_value)
+print("Desviación estándar:", std_deviation_value)
+
+Frecuencia de los números: Counter({594: 1, 947: 1, 554: 1, 172: 1, 35: 1, 295: 1, 845: 1, 874: 1, 597: 1, 521: 1, 233: 1, 133: 1, 413: 1, 506: 1, 309: 1})
+Promedio (media): 468.53333333333336
+Mediana: 506.0
+Moda: 594
+Varianza: 72090.51555555555
+Desviación estándar: 268.4967701026505
+
+///
+import matplotlib.pyplot as plt
+from collections import Counter
+
+# Datos proporcionados por el usuario
+results_user = [594,947,554, 172, 35, 295, 845, 874, 597, 521, 233, 133, 413, 506, 309]
+
+# Frecuencia de los números
+frequency = Counter(results_user)
+
+# Graficar la frecuencia de los números
+plt.bar(frequency.keys(), frequency.values(), color='skyblue')
+plt.xlabel('Número')
+plt.ylabel('Frecuencia')
+plt.title('Frecuencia de los Números en los Últimos 10 Resultados')
+
+# Mostrar la gráfica
+plt.show()
+
+import numpy as np
+
+# Datos históricos
+results_user = [594,947,554, 172, 35, 295, 845, 874, 597, 521, 233, 133, 413, 506, 309]
+
+# Crear un modelo predictivo basado en la frecuencia de números históricos
+frequency_weights = [results_user.count(i) for i in range(1, 999)]  # Frecuencia del 1 al 999
+
+# Generar números predichos sin repetición
+predicted_numbers = np.random.choice(range(1, 999), size=3, replace=False, p=np.array(frequency_weights)/sum(frequency_weights))
+
+print("Predicción de números:", predicted_numbers)
+
+Predicción de números: [233 506 133]
