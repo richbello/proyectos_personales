@@ -1,0 +1,40 @@
+#modelo reajustado dorado mañana octubre 21
+
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+
+# Datos históricos actualizados con el número 1300
+results_user = [5142, 2836, 3070, 318, 504, 3763, 8748, 2704, 2519, 1211, 6010, 8160, 987, 9995, 8032, 385, 8393, 8993, 2776, 6011, 3012, 2415, 7860, 2859, 4939, 6980, 335, 4134, 494, 7475, 1086, 4310, 1300]
+
+# Crear etiquetas y características
+X = np.array([[i] for i in range(len(results_user))])  # Posición en la lista
+y = np.array(results_user)  # Resultados históricos
+
+# Dividir el conjunto de datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Escalar los datos
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Crear el modelo de regresión logística
+model = LogisticRegression(max_iter=200)  # Aumentar el número de iteraciones
+
+# Entrenar el modelo
+model.fit(X_train_scaled, y_train)
+
+# Hacer predicciones
+predicted_numbers = model.predict(X_test_scaled)
+
+# Mostrar los resultados
+print("Predicciones de números:", predicted_numbers)
+
+# Para una predicción nueva
+new_data = np.array([[len(results_user)]])  # Simula una nueva posición
+new_data_scaled = scaler.transform(new_data)  # Escalar nueva entrada
+predicted_new_number = model.predict(new_data_scaled)
+
+print("Número predicho para nueva entrada:", predicted_new_number)
