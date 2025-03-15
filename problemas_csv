@@ -1,0 +1,111 @@
+import pandas as pd
+from google.colab import files
+
+# 📂 Subir archivo manualmente
+uploaded = files.upload()
+file_name = list(uploaded.keys())[0]
+
+# 🔹 Intentar leer CSV con delimitador automático
+try:
+    df = pd.read_csv(file_name, sep=None, engine="python")  # Detecta delimitador automáticamente
+except Exception as e:
+    print(f"❌ Error al leer CSV: {e}")
+
+///
+
+
+    import pandas as pd
+from google.colab import files
+
+# 🔹 Subir archivo manualmente
+uploaded = files.upload()
+file_name = list(uploaded.keys())[0]  # Obtener nombre del archivo
+
+# 🔹 Intentar leer el archivo con distintos separadores
+try:
+    df = pd.read_csv(file_name, encoding="latin1", sep=";", engine="python")
+except:
+    df = pd.read_csv(file_name, encoding="latin1", sep=",", engine="python")
+
+# 🔹 Mostrar las columnas originales
+print("\n📌 Columnas detectadas en el archivo CSV:", df.columns.tolist())
+
+# 🔹 Normalizar nombres de columnas
+df.columns = df.columns.str.strip().str.upper().str.replace(" ", "_")
+
+# 🔹 Mostrar los nuevos nombres de columnas
+print("\n🔍 Columnas normalizadas:", df.columns.tolist())
+
+
+////
+
+
+
+
+with open(file_name, "r", encoding="latin1") as file:
+    lines = file.readlines()
+
+# Mostrar las primeras 10 líneas para analizar el problema
+for i, line in enumerate(lines[:10]):
+    print(f"Línea {i+1}: {line}")
+
+
+
+/////
+
+
+    file_name = "Listado_hoteles_Yopal_20250315.csv"
+
+# Leer las primeras líneas para revisar el contenido
+with open(file_name, "r", encoding="latin1") as file:
+    content = file.readlines()
+
+# Mostrar las primeras 10 líneas
+for i, line in enumerate(content[:10], 1):
+    print(f"Línea {i}: {line.strip()}")
+
+
+///
+
+
+import pandas as pd
+import re
+
+file_name = "Listado_hoteles_Yopal_20250315.csv"
+
+# Cargar el archivo eliminando el BOM
+df = pd.read_csv(file_name, encoding="utf-8-sig")
+
+# 🔹 Verificar las columnas detectadas
+print("📌 Columnas detectadas:", df.columns.tolist())
+
+# 🔹 Renombrar columnas eliminando espacios
+df.columns = df.columns.str.strip()
+
+# 🔹 Función para limpiar coordenadas
+def limpiar_coordenada(valor):
+    if isinstance(valor, str):
+        # Remover caracteres no numéricos excepto "." y "-"
+        valor = re.sub(r"[^0-9.-]", "", valor)
+        # Reemplazar comas por puntos (si hubiera)
+        valor = valor.replace(",", ".")
+        try:
+            return float(valor)  # Convertir a número
+        except ValueError:
+            return None  # Si no se puede convertir, dejar como NaN
+    return valor
+
+# 🔹 Aplicar limpieza a LATITUD y LONGITUD
+df["LATITUD"] = df["LATITUD"].apply(limpiar_coordenada)
+df["LONGITUD"] = df["LONGITUD"].apply(limpiar_coordenada)
+
+# 🔹 Eliminar filas con coordenadas vacías o incorrectas
+df = df.dropna(subset=["LATITUD", "LONGITUD"])
+
+# 🔹 Guardar el archivo corregido
+output_file = "Listado_hoteles_Yopal_CORREGIDO.csv"
+df.to_csv(output_file, index=False, encoding="utf-8-sig")
+
+print(f"✅ Archivo corregido guardado como: {output_file}")
+
+    
